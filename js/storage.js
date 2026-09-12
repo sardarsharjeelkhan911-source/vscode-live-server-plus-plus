@@ -93,22 +93,22 @@ function safeParse(value) {
   } catch {
     return null;
   }
+}
 
-  function mergeSeededRecords(defaultItems, existingItems) {
-    const existing = Array.isArray(existingItems) ? existingItems : [];
-    const merged = existing.map((item) => {
-      const seed = defaultItems.find((defaultItem) => defaultItem.id === item.id);
-      return seed ? { ...seed, ...item } : item;
-    });
+function mergeSeededRecords(defaultItems, existingItems) {
+  const existing = Array.isArray(existingItems) ? existingItems : [];
+  const merged = existing.map((item) => {
+    const seed = defaultItems.find((defaultItem) => defaultItem.id === item.id);
+    return seed ? { ...seed, ...item } : item;
+  });
 
-    defaultItems.forEach((defaultItem) => {
-      if (!merged.some((item) => item.id === defaultItem.id)) {
-        merged.push(defaultItem);
-      }
-    });
+  defaultItems.forEach((defaultItem) => {
+    if (!merged.some((item) => item.id === defaultItem.id)) {
+      merged.push(defaultItem);
+    }
+  });
 
-    return merged;
-  }
+  return merged;
 }
 
 export function initStorage() {

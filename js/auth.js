@@ -11,13 +11,20 @@ function parseJSON(value) {
 
 function getStoredCredentials() {
   const credentials = parseJSON(localStorage.getItem(ADMIN_CREDENTIALS_KEY));
-  if (credentials?.username && credentials?.password) {
+  if (credentials?.username && credentials?.passwordHash) {
     return credentials;
   }
   return null;
 }
 
-export function loginAdmin(username, password) {
+async function hashPassword(password) {
+  const content = new TextEncoder().encode(String(password || ""));
+  const hashBuffer = await crypto.subtle.digest("SHA-256", content);
+  const bytes = Array.from(new Uint8Array(hashBuffer));
+  return bytes.map((byte) => byte.toString(16).padStart(2, "0")).join("");
+}
+
+export async function loginAdmin(username, password) {
   const normalizedUsername = String(username || "").trim();
   const normalizedPassword = String(password || "");
   const existing = getStoredCredentials();
@@ -26,12 +33,16 @@ export function loginAdmin(username, password) {
     if (!normalizedUsername || !normalizedPassword) {
       throw new Error("Enter username and password to initialize demo admin login.");
     }
+    const passwordHash = await hashPassword(normalizedPassword);
     localStorage.setItem(
       ADMIN_CREDENTIALS_KEY,
-      JSON.stringify({ username: normalizedUsername, password: normalizedPassword })
+      JSON.stringify({ username: normalizedUsername, passwordHash })
     );
-  } else if (normalizedUsername !== existing.username || normalizedPassword !== existing.password) {
-    throw new Error("Invalid login credentials.");
+  } else {
+    const inputHash = await hashPassword(normalizedPassword);
+    if (normalizedUsername !== existing.username || inputHash !== existing.passwordHash) {
+      throw new Error("Invalid login credentials.");
+    }
   }
 
   const session = {

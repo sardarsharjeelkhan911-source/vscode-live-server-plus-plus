@@ -646,10 +646,10 @@ function renderAdminPage() {
     `;
   }
 
-  loginForm.addEventListener("submit", (event) => {
+  loginForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     try {
-      loginAdmin(loginForm.adminUsername.value, loginForm.adminPassword.value);
+      await loginAdmin(loginForm.adminUsername.value, loginForm.adminPassword.value);
       showToast("Welcome to admin dashboard");
       loginForm.reset();
       refreshAdminUI();
@@ -666,6 +666,7 @@ function renderAdminPage() {
 
   document.getElementById("productForm").addEventListener("submit", (event) => {
     event.preventDefault();
+    const existingProduct = getProductById(document.getElementById("productId").value || "");
     const payload = {
       id: document.getElementById("productId").value || undefined,
       name: document.getElementById("productName").value,
@@ -675,7 +676,7 @@ function renderAdminPage() {
       discountPrice: document.getElementById("productDiscount").value,
       stock: document.getElementById("productStock").value,
       description: document.getElementById("productDescription").value,
-      active: true
+      active: existingProduct ? existingProduct.active : true
     };
 
     saveProduct(payload);

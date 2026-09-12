@@ -93,9 +93,7 @@ export function getDashboardMetrics() {
   const products = getProducts({ includeInactive: true });
 
   const statusCount = (status) => orders.filter((order) => order.status === status).length;
-  const totalSales = orders
-    .filter((order) => !["Cancelled", "Returned"].includes(order.status))
-    .reduce((acc, order) => acc + order.total, 0);
+  const totalSales = orders.filter((order) => order.status === "Delivered").reduce((acc, order) => acc + order.total, 0);
 
   return {
     totalSales,
@@ -111,7 +109,7 @@ export function getDashboardMetrics() {
 
 export function getSalesReport() {
   const allOrders = listOrders();
-  const orders = allOrders.filter((order) => !["Cancelled", "Returned"].includes(order.status));
+  const orders = allOrders.filter((order) => order.status === "Delivered");
   const productSales = new Map();
 
   orders.forEach((order) => {
@@ -127,7 +125,7 @@ export function getSalesReport() {
 
   return {
     totalSales: orders.reduce((acc, order) => acc + order.total, 0),
-    numberOfOrders: orders.length,
+    numberOfOrders: allOrders.length,
     deliveredOrders: orders.filter((order) => order.status === "Delivered").length,
     cancelledOrders: allOrders.filter((order) => order.status === "Cancelled").length,
     returnedOrders: allOrders.filter((order) => order.status === "Returned").length,
