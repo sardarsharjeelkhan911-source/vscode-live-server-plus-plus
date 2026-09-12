@@ -34,7 +34,7 @@ MyStore is a complete beginner-friendly e-commerce web application built with **
 
 ## 4) Admin Login (Demo Credentials)
 
-Demo local credentials are in `js/storage.js` under `settings.adminCredentials`:
+Demo local credentials are in `js/auth.js` (`DEMO_ADMIN_CREDENTIALS`):
 
 - Username: `admin`
 - Password: `admin123`
@@ -55,7 +55,7 @@ Add real endpoint URLs and credentials via a secure backend/environment layer. D
 
 1. Push repository to GitHub.
 2. In repository settings, open **Pages**.
-3. Select deploy source (branch: `main`, folder: `/root`).
+3. Select deploy source (branch: `main`, folder: `/ (root)`).
 4. Save and wait for publish.
 5. Open the generated Pages URL.
 

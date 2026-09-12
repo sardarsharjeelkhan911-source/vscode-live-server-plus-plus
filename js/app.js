@@ -31,6 +31,15 @@ function formatCurrency(amount) {
   return `PKR ${Number(amount || 0).toLocaleString()}`;
 }
 
+function escapeHTML(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll("\"", "&quot;")
+    .replaceAll("'", "&#39;");
+}
+
 function showToast(message) {
   const container = document.getElementById("toastContainer");
   if (!container) return;
@@ -75,8 +84,8 @@ function productCard(product) {
   const price = product.discountPrice || product.price;
   return `
     <article class="product-card">
-      <img src="${product.image}" alt="${product.name}" loading="lazy" />
-      <h3>${product.name}</h3>
+      <img src="${escapeHTML(product.image)}" alt="${escapeHTML(product.name)}" loading="lazy" />
+      <h3>${escapeHTML(product.name)}</h3>
       <div>
         <span class="price">${formatCurrency(price)}</span>
         ${product.discountPrice ? `<span class="old-price">${formatCurrency(product.price)}</span>` : ""}
@@ -84,7 +93,7 @@ function productCard(product) {
       <p class="stock">Stock: ${product.stock}</p>
       <div class="product-card-actions">
         <a class="btn btn-secondary" href="product.html?id=${encodeURIComponent(product.id)}">View</a>
-        <button class="btn btn-primary" data-action="add-cart" data-id="${product.id}" type="button">Add to Cart</button>
+        <button class="btn btn-primary" data-action="add-cart" data-id="${escapeHTML(product.id)}" type="button">Add to Cart</button>
       </div>
     </article>
   `;
@@ -113,7 +122,7 @@ function renderHomePage() {
   document.getElementById("featuredProducts").innerHTML = featured.map(productCard).join("");
   document.getElementById("latestProducts").innerHTML = latest.map(productCard).join("");
   document.getElementById("categoryGrid").innerHTML = categories
-    .map((category) => `<a class="category-chip" href="shop.html?category=${encodeURIComponent(category.id)}">${category.name}</a>`)
+    .map((category) => `<a class="category-chip" href="shop.html?category=${encodeURIComponent(category.id)}">${escapeHTML(category.name)}</a>`)
     .join("");
   bindAddToCart();
 }
@@ -127,7 +136,7 @@ function renderShopPage() {
 
   const categories = getCategories();
   categorySelect.innerHTML = `<option value="">All Categories</option>${categories
-    .map((category) => `<option value="${category.id}">${category.name}</option>`)
+    .map((category) => `<option value="${escapeHTML(category.id)}">${escapeHTML(category.name)}</option>`)
     .join("")}`;
 
   searchInput.value = params.get("q") || "";
@@ -166,10 +175,10 @@ function renderProductPage() {
   details.innerHTML = `
     <section class="card">
       <div class="checkout-grid">
-        <img src="${product.image}" alt="${product.name}" />
+        <img src="${escapeHTML(product.image)}" alt="${escapeHTML(product.name)}" />
         <div>
-          <h1>${product.name}</h1>
-          <p>${product.description}</p>
+          <h1>${escapeHTML(product.name)}</h1>
+          <p>${escapeHTML(product.description)}</p>
           <p><strong>${formatCurrency(product.discountPrice || product.price)}</strong>
             ${product.discountPrice ? `<span class="old-price">${formatCurrency(product.price)}</span>` : ""}
           </p>
@@ -230,15 +239,15 @@ function renderCartPage() {
                 .map(
                   (item) => `
                     <tr>
-                      <td>${item.name}</td>
+                      <td>${escapeHTML(item.name)}</td>
                       <td>${formatCurrency(item.unitPrice)}</td>
                       <td>
-                        <button class="btn btn-secondary" data-action="dec" data-id="${item.productId}" type="button">-</button>
+                        <button class="btn btn-secondary" data-action="dec" data-id="${escapeHTML(item.productId)}" type="button">-</button>
                         <span>${item.qty}</span>
-                        <button class="btn btn-secondary" data-action="inc" data-id="${item.productId}" type="button">+</button>
+                        <button class="btn btn-secondary" data-action="inc" data-id="${escapeHTML(item.productId)}" type="button">+</button>
                       </td>
                       <td>${formatCurrency(item.lineTotal)}</td>
-                      <td><button class="btn btn-danger" data-action="remove" data-id="${item.productId}" type="button">Remove</button></td>
+                      <td><button class="btn btn-danger" data-action="remove" data-id="${escapeHTML(item.productId)}" type="button">Remove</button></td>
                     </tr>
                   `
                 )
@@ -300,7 +309,7 @@ function renderCheckoutPage() {
     summary = getCheckoutSummary(buyNow);
   } catch (error) {
     form.classList.add("hidden");
-    summaryRoot.innerHTML = `<div class="empty-state">${error.message} <a href="shop.html">Go to Shop</a></div>`;
+    summaryRoot.innerHTML = `<div class="empty-state">${escapeHTML(error.message)} <a href="shop.html">Go to Shop</a></div>`;
     return;
   }
 
@@ -308,7 +317,7 @@ function renderCheckoutPage() {
     <h2>Order Summary</h2>
     <ul class="order-items">
       ${summary.items
-        .map((item) => `<li><span>${item.name} x ${item.qty}</span><strong>${formatCurrency(item.lineTotal)}</strong></li>`)
+        .map((item) => `<li><span>${escapeHTML(item.name)} x ${item.qty}</span><strong>${formatCurrency(item.lineTotal)}</strong></li>`)
         .join("")}
     </ul>
     <hr />
@@ -337,10 +346,10 @@ function renderCheckoutPage() {
       confirmation.classList.remove("hidden");
       confirmation.innerHTML = `
         <h2>Order Confirmed</h2>
-        <p>Thank you, <strong>${order.customerName}</strong>!</p>
-        <p>Order ID: <strong>${order.id}</strong></p>
+        <p>Thank you, <strong>${escapeHTML(order.customerName)}</strong>!</p>
+        <p>Order ID: <strong>${escapeHTML(order.id)}</strong></p>
         <p>Total: <strong>${formatCurrency(order.total)}</strong></p>
-        <p>Status: <strong>${order.status}</strong></p>
+        <p>Status: <strong>${escapeHTML(order.status)}</strong></p>
         <a class="btn btn-secondary" href="tracking.html">Track your order</a>
       `;
       form.reset();
@@ -394,10 +403,10 @@ function renderTrackingPage() {
 
     result.classList.remove("hidden");
     result.innerHTML = `
-      <h2>Order ${order.id}</h2>
-      <p><strong>Customer:</strong> ${order.customerName}</p>
-      <p><strong>Status:</strong> ${order.status}</p>
-      ${order.trackingNumber ? `<p><strong>Tracking #:</strong> ${order.trackingNumber}</p>` : ""}
+      <h2>Order ${escapeHTML(order.id)}</h2>
+      <p><strong>Customer:</strong> ${escapeHTML(order.customerName)}</p>
+      <p><strong>Status:</strong> ${escapeHTML(order.status)}</p>
+      ${order.trackingNumber ? `<p><strong>Tracking #:</strong> ${escapeHTML(order.trackingNumber)}</p>` : ""}
       <ul class="timeline">${timelineHtml}</ul>
     `;
   });
@@ -444,7 +453,7 @@ function renderAdminPage() {
   function renderCategoryOptions() {
     const select = document.getElementById("productCategory");
     const categories = getCategories();
-    select.innerHTML = categories.map((category) => `<option value="${category.id}">${category.name}</option>`).join("");
+    select.innerHTML = categories.map((category) => `<option value="${escapeHTML(category.id)}">${escapeHTML(category.name)}</option>`).join("");
   }
 
   function renderProductTable() {
@@ -455,14 +464,14 @@ function renderAdminPage() {
       .map(
         (product) => `
           <tr>
-            <td>${product.name}</td>
+            <td>${escapeHTML(product.name)}</td>
             <td>${formatCurrency(product.discountPrice || product.price)}</td>
             <td>${product.stock}</td>
             <td>${product.active ? "Active" : "Inactive"}</td>
             <td>
-              <button class="btn btn-secondary" data-action="edit-product" data-id="${product.id}" type="button">Edit</button>
-              <button class="btn btn-danger" data-action="delete-product" data-id="${product.id}" type="button">Delete</button>
-              <button class="btn btn-success" data-action="toggle-product" data-id="${product.id}" type="button">${
+              <button class="btn btn-secondary" data-action="edit-product" data-id="${escapeHTML(product.id)}" type="button">Edit</button>
+              <button class="btn btn-danger" data-action="delete-product" data-id="${escapeHTML(product.id)}" type="button">Delete</button>
+              <button class="btn btn-success" data-action="toggle-product" data-id="${escapeHTML(product.id)}" type="button">${
                 product.active ? "Deactivate" : "Activate"
               }</button>
             </td>
@@ -511,10 +520,10 @@ function renderAdminPage() {
       .map(
         (category) => `
           <li>
-            <span>${category.name}</span>
+            <span>${escapeHTML(category.name)}</span>
             <span>
-              <button class="btn btn-secondary" data-action="edit-category" data-id="${category.id}" type="button">Edit</button>
-              <button class="btn btn-danger" data-action="delete-category" data-id="${category.id}" type="button">Delete</button>
+              <button class="btn btn-secondary" data-action="edit-category" data-id="${escapeHTML(category.id)}" type="button">Edit</button>
+              <button class="btn btn-danger" data-action="delete-category" data-id="${escapeHTML(category.id)}" type="button">Delete</button>
             </span>
           </li>
         `
@@ -554,15 +563,15 @@ function renderAdminPage() {
           .map(
             (order) => `
               <tr>
-                <td>${order.id}</td>
-                <td>${order.customerName}<br/><small>${order.customerPhone}</small></td>
+                <td>${escapeHTML(order.id)}</td>
+                <td>${escapeHTML(order.customerName)}<br/><small>${escapeHTML(order.customerPhone)}</small></td>
                 <td>${formatCurrency(order.total)}</td>
-                <td><span class="badge ${order.status.toLowerCase().replace(/\s+/g, "-")}">${order.status}</span></td>
+                <td><span class="badge ${order.status.toLowerCase().replace(/\s+/g, "-")}">${escapeHTML(order.status)}</span></td>
                 <td>
-                  <select data-action="set-status" data-id="${order.id}">
+                  <select data-action="set-status" data-id="${escapeHTML(order.id)}">
                     ${ORDER_STATUSES.map((statusOption) => `<option value="${statusOption}" ${statusOption === order.status ? "selected" : ""}>${statusOption}</option>`).join("")}
                   </select>
-                  <button class="btn btn-secondary" data-action="view-order" data-id="${order.id}" type="button">View</button>
+                  <button class="btn btn-secondary" data-action="view-order" data-id="${escapeHTML(order.id)}" type="button">View</button>
                 </td>
               </tr>
             `
@@ -587,15 +596,9 @@ function renderAdminPage() {
         const order = findOrderById(button.dataset.id);
         if (!order) return;
         window.alert(
-          `${order.id}
-Customer: ${order.customerName}
-Phone: ${order.customerPhone}
-Address: ${order.address}
-Items:
-${order.items
+          `${order.id}\nCustomer: ${order.customerName}\nPhone: ${order.customerPhone}\nAddress: ${order.address}\nItems:\n${order.items
             .map((item) => `- ${item.name} x ${item.qty}`)
-            .join("
-")}`
+            .join("\n")}`
         );
       });
     });
@@ -608,10 +611,10 @@ ${order.items
           .map(
             (customer) => `
               <tr>
-                <td>${customer.name}</td>
-                <td>${customer.phone}</td>
-                <td>${customer.email}</td>
-                <td>${customer.city}, ${customer.address}</td>
+                <td>${escapeHTML(customer.name)}</td>
+                <td>${escapeHTML(customer.phone)}</td>
+                <td>${escapeHTML(customer.email)}</td>
+                <td>${escapeHTML(customer.city)}, ${escapeHTML(customer.address)}</td>
                 <td>${customer.totalOrders}</td>
                 <td>${formatCurrency(customer.totalSpending)}</td>
               </tr>
@@ -631,7 +634,7 @@ ${order.items
       <p>Returned: <strong>${report.returnedOrders}</strong></p>
       <h3>Best-selling products</h3>
       <ul class="list">
-        ${report.bestSellingProducts.map((item) => `<li><span>${item.name} (${item.qty} units)</span><span>${formatCurrency(item.amount)}</span></li>`).join("") || "<li>No sales data yet.</li>"}
+        ${report.bestSellingProducts.map((item) => `<li><span>${escapeHTML(item.name)} (${item.qty} units)</span><span>${formatCurrency(item.amount)}</span></li>`).join("") || "<li>No sales data yet.</li>"}
       </ul>
     `;
   }

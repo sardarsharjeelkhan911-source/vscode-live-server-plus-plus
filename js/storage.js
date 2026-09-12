@@ -78,11 +78,7 @@ function defaultData() {
       storeName: "MyStore",
       currency: "PKR",
       deliveryCharge: 250,
-      lowStockThreshold: 5,
-      adminCredentials: {
-        username: "admin",
-        password: "admin123"
-      }
+      lowStockThreshold: 5
     },
     categories: seedCategories,
     products: seedProducts,

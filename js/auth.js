@@ -1,10 +1,12 @@
-import { getSettings } from "./storage.js";
-
 const ADMIN_SESSION_KEY = "mystore.admin.session";
+const DEMO_ADMIN_CREDENTIALS = {
+  username: "admin",
+  password: "admin123"
+};
 
 export function loginAdmin(username, password) {
-  const credentials = getSettings().adminCredentials;
-  const isValid = username === credentials.username && password === credentials.password;
+  const isValid =
+    username === DEMO_ADMIN_CREDENTIALS.username && password === DEMO_ADMIN_CREDENTIALS.password;
   if (!isValid) {
     throw new Error("Invalid login credentials.");
   }
@@ -31,4 +33,8 @@ export function getAdminSession() {
 
 export function isAdminLoggedIn() {
   return Boolean(getAdminSession());
+}
+
+export function getDemoAdminCredentials() {
+  return { ...DEMO_ADMIN_CREDENTIALS };
 }

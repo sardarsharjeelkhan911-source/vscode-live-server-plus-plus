@@ -72,8 +72,9 @@ export async function placeOrder(customerInput, buyNowItem = null) {
     }
   });
 
-  const customer = upsertCustomer(customerInput);
+  summary.items.forEach((item) => decreaseStock(item.productId, item.qty));
 
+  const customer = upsertCustomer(customerInput);
   const baseOrder = {
     customerName: customer.name,
     customerPhone: customer.phone,
@@ -100,8 +101,6 @@ export async function placeOrder(customerInput, buyNowItem = null) {
     trackingNumber: shipment.trackingNumber,
     shipmentStatus: shipment.status
   });
-
-  summary.items.forEach((item) => decreaseStock(item.productId, item.qty));
 
   if (summary.source === "cart") {
     clearCart();
