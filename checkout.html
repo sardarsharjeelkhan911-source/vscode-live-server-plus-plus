@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MyStore | Checkout</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body data-page="checkout">
+  <header class="site-header">
+    <nav class="navbar container" aria-label="Primary navigation">
+      <a href="index.html" class="brand">MyStore</a>
+      <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="shop.html">Shop</a></li>
+        <li><a href="cart.html">Cart (<span id="cartCount">0</span>)</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="container section">
+    <h1>Cash on Delivery Checkout</h1>
+    <div class="checkout-grid">
+      <form id="checkoutForm" class="card">
+        <h2>Customer Information</h2>
+        <label for="name">Full Name *</label>
+        <input id="name" name="name" required />
+
+        <label for="phone">Phone Number *</label>
+        <input id="phone" name="phone" required placeholder="e.g. +923001234567" />
+
+        <label for="email">Email *</label>
+        <input id="email" name="email" type="email" required />
+
+        <label for="city">City *</label>
+        <input id="city" name="city" required />
+
+        <label for="address">Full Address *</label>
+        <textarea id="address" name="address" required></textarea>
+
+        <label for="notes">Order Notes</label>
+        <textarea id="notes" name="notes"></textarea>
+
+        <button class="btn btn-primary" type="submit">Place Order</button>
+      </form>
+
+      <aside id="checkoutSummary" class="card"></aside>
+    </div>
+
+    <section id="orderConfirmation" class="card hidden" aria-live="polite"></section>
+  </main>
+
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

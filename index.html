@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MyStore | Home</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body data-page="home">
+  <header class="site-header">
+    <nav class="navbar container" aria-label="Primary navigation">
+      <a href="index.html" class="brand">MyStore</a>
+      <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="shop.html">Shop</a></li>
+        <li><a href="shop.html#categories">Categories</a></li>
+        <li><a href="cart.html">Cart (<span id="cartCount">0</span>)</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <form id="navbarSearchForm" class="nav-search" role="search">
+        <label for="navbarSearch" class="sr-only">Search products</label>
+        <input id="navbarSearch" name="q" type="search" placeholder="Search" />
+      </form>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero container">
+      <div>
+        <h1>Shop smarter with MyStore</h1>
+        <p>Fast local-first shopping with reliable cash on delivery experience.</p>
+        <a class="btn btn-primary" href="shop.html">Start Shopping</a>
+      </div>
+      <img src="assets/placeholder.svg" alt="Shopping illustration" />
+    </section>
+
+    <section class="container section">
+      <div class="section-head">
+        <h2>Featured Products</h2>
+        <a href="shop.html">View all</a>
+      </div>
+      <div id="featuredProducts" class="product-grid"></div>
+    </section>
+
+    <section class="container section">
+      <div class="section-head">
+        <h2>Latest Products</h2>
+      </div>
+      <div id="latestProducts" class="product-grid"></div>
+    </section>
+
+    <section class="container section" id="categories">
+      <div class="section-head">
+        <h2>Shop by Category</h2>
+      </div>
+      <div id="categoryGrid" class="category-grid"></div>
+    </section>
+
+    <section class="container section contact" id="contact">
+      <h2>Contact</h2>
+      <p>Email: support@mystore.local</p>
+      <p>Phone: +92 300 0000000</p>
+    </section>
+  </main>
+
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

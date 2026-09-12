@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600" role="img" aria-label="MyStore placeholder">
+  <defs>
+    <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#4f46e5"/>
+      <stop offset="1" stop-color="#8b5cf6"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="#eef2ff"/>
+  <rect x="120" y="130" width="560" height="340" rx="24" fill="url(#g)"/>
+  <text x="400" y="305" text-anchor="middle" fill="white" font-size="58" font-family="Arial, sans-serif">MyStore</text>
+</svg>
