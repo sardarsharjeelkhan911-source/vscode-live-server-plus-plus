@@ -7,7 +7,8 @@ MyStore is a complete beginner-friendly e-commerce web application built with **
 1. Open this repository in VS Code.
 2. Install the **Live Server** extension (if not installed).
 3. Right-click `index.html` and select **Open with Live Server**.
-4. Use these pages:
+4. Serve over HTTP (`http://...`) when testing; do not open pages with `file://` because ES module imports require an HTTP server.
+5. Use these pages:
    - `index.html` (home)
    - `shop.html` (catalog)
    - `product.html?id=<productId>`

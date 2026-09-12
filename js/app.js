@@ -352,6 +352,7 @@ function renderCheckoutPage() {
         <p>Status: <strong>${escapeHTML(order.status)}</strong></p>
         <a class="btn btn-secondary" href="tracking.html">Track your order</a>
       `;
+      form.classList.add("hidden");
       form.reset();
       updateCartBadge();
       showToast("Order placed successfully.");

@@ -110,7 +110,13 @@ function migrate(data) {
   }
 
   if ((data.meta.schemaVersion || 0) < SCHEMA_VERSION) {
-    const merged = { ...defaultData(), ...data };
+    const defaults = defaultData();
+    const merged = {
+      ...defaults,
+      ...data,
+      meta: { ...defaults.meta, ...(data.meta || {}) },
+      settings: { ...defaults.settings, ...(data.settings || {}) }
+    };
     merged.meta.schemaVersion = SCHEMA_VERSION;
     localStorage.setItem(DB_KEY, JSON.stringify(merged));
   }

@@ -110,7 +110,8 @@ export function getDashboardMetrics() {
 }
 
 export function getSalesReport() {
-  const orders = listOrders().filter((order) => !["Cancelled", "Returned"].includes(order.status));
+  const allOrders = listOrders();
+  const orders = allOrders.filter((order) => !["Cancelled", "Returned"].includes(order.status));
   const productSales = new Map();
 
   orders.forEach((order) => {
@@ -128,8 +129,8 @@ export function getSalesReport() {
     totalSales: orders.reduce((acc, order) => acc + order.total, 0),
     numberOfOrders: orders.length,
     deliveredOrders: orders.filter((order) => order.status === "Delivered").length,
-    cancelledOrders: orders.filter((order) => order.status === "Cancelled").length,
-    returnedOrders: orders.filter((order) => order.status === "Returned").length,
+    cancelledOrders: allOrders.filter((order) => order.status === "Cancelled").length,
+    returnedOrders: allOrders.filter((order) => order.status === "Returned").length,
     bestSellingProducts
   };
 }
