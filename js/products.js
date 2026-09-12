@@ -104,10 +104,18 @@ export function addCategory(name) {
 }
 
 export function updateCategory(categoryId, name) {
-  const categories = getCategories().map((category) =>
-    category.id === categoryId ? { ...category, name: name.trim() } : category
+  const trimmed = name.trim();
+  const categories = getCategories();
+  const duplicate = categories.some(
+    (category) => category.id !== categoryId && category.name.toLowerCase() === trimmed.toLowerCase()
   );
-  setCollection("categories", categories);
+  if (duplicate) {
+    throw new Error("Category already exists.");
+  }
+  const updated = categories.map((category) =>
+    category.id === categoryId ? { ...category, name: trimmed } : category
+  );
+  setCollection("categories", updated);
 }
 
 export function deleteCategory(categoryId) {

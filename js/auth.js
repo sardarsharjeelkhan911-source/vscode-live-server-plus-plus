@@ -1,12 +1,34 @@
 const ADMIN_SESSION_KEY = "mystore.admin.session";
-const DEMO_ADMIN_CREDENTIALS = {
-  username: "admin",
-  password: "admin123"
-};
+const ADMIN_CREDENTIALS_KEY = "mystore.admin.credentials";
+
+function parseJSON(value) {
+  try {
+    return JSON.parse(value);
+  } catch {
+    return null;
+  }
+}
+
+function generateDemoCredentials() {
+  return {
+    username: "admin",
+    password: `demo-${Math.random().toString(36).slice(2, 10)}`
+  };
+}
+
+function ensureDemoCredentials() {
+  const existing = parseJSON(localStorage.getItem(ADMIN_CREDENTIALS_KEY));
+  if (existing?.username && existing?.password) {
+    return existing;
+  }
+  const seeded = generateDemoCredentials();
+  localStorage.setItem(ADMIN_CREDENTIALS_KEY, JSON.stringify(seeded));
+  return seeded;
+}
 
 export function loginAdmin(username, password) {
-  const isValid =
-    username === DEMO_ADMIN_CREDENTIALS.username && password === DEMO_ADMIN_CREDENTIALS.password;
+  const credentials = ensureDemoCredentials();
+  const isValid = username === credentials.username && password === credentials.password;
   if (!isValid) {
     throw new Error("Invalid login credentials.");
   }
@@ -36,5 +58,5 @@ export function isAdminLoggedIn() {
 }
 
 export function getDemoAdminCredentials() {
-  return { ...DEMO_ADMIN_CREDENTIALS };
+  return { ...ensureDemoCredentials() };
 }

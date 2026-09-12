@@ -35,12 +35,13 @@ MyStore is a complete beginner-friendly e-commerce web application built with **
 
 ## 4) Admin Login (Demo Credentials)
 
-Demo local credentials are in `js/auth.js` (`DEMO_ADMIN_CREDENTIALS`):
+Demo local credentials are managed in `js/auth.js`.
 
-- Username: `admin`
-- Password: `admin123`
+- Username is `admin`.
+- Password is auto-generated on first run and shown on the `admin.html` login card.
+- Credentials are stored locally in `mystore.admin.credentials` and can be cleared/reset from browser localStorage.
 
-You can change them in `js/auth.js` for local usage. Session is persisted in localStorage (`mystore.admin.session`).
+Session is persisted in localStorage (`mystore.admin.session`).
 
 ## 5) Real TCS API Integration Points
 

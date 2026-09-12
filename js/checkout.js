@@ -99,7 +99,8 @@ export async function placeOrder(customerInput, buyNowItem = null) {
   try {
     shipment = await createShipment({ id: "TEMP", ...baseOrder });
   } catch (error) {
-    shipment = { trackingNumber: null, status: `Shipment pending (${error.message})` };
+    summary.items.forEach((item) => increaseStock(item.productId, item.qty));
+    throw new Error(`Shipment booking failed: ${error.message}`);
   }
 
   let order;

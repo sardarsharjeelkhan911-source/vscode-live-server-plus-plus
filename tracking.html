@@ -23,9 +23,9 @@
     <h1>Track Your Order</h1>
     <form id="trackingForm" class="card narrow">
       <label for="trackingOrderId">Order ID *</label>
-      <input id="trackingOrderId" required />
+      <input id="trackingOrderId" type="text" autocomplete="off" required />
       <label for="trackingPhone">Phone Number *</label>
-      <input id="trackingPhone" required />
+      <input id="trackingPhone" type="tel" autocomplete="tel" required />
       <button class="btn btn-primary" type="submit">Track Order</button>
     </form>
     <section id="trackingResult" class="card hidden"></section>

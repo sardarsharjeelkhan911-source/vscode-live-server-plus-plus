@@ -1,7 +1,7 @@
 import { addToCart, getCartCount, getCartDetails, removeCartItem, updateCartItem } from "./cart.js";
 import { getCheckoutSummary, placeOrder } from "./checkout.js";
 import { listCustomersWithStats } from "./customers.js";
-import { loginAdmin, logoutAdmin, isAdminLoggedIn } from "./auth.js";
+import { getDemoAdminCredentials, loginAdmin, logoutAdmin, isAdminLoggedIn } from "./auth.js";
 import {
   ORDER_STATUSES,
   filterOrders,
@@ -421,6 +421,11 @@ function renderAdminPage() {
 
   const statusFilter = document.getElementById("orderStatusFilter");
   statusFilter.innerHTML = `<option value="">All</option>${ORDER_STATUSES.map((s) => `<option value="${s}">${s}</option>`).join("")}`;
+  const demoCredentials = getDemoAdminCredentials();
+  const demoHint = document.getElementById("adminDemoHint");
+  if (demoHint) {
+    demoHint.textContent = `Demo credentials: ${demoCredentials.username} / ${demoCredentials.password}`;
+  }
 
   function refreshAdminUI() {
     const loggedIn = isAdminLoggedIn();
