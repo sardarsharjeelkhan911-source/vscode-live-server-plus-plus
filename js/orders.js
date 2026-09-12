@@ -1,4 +1,4 @@
-import { generateId, getCollection, setCollection } from "./storage.js";
+import { generateId, getCollection, getSettings, setCollection } from "./storage.js";
 import { getProducts } from "./products.js";
 
 export const ORDER_STATUSES = [
@@ -105,7 +105,7 @@ export function getDashboardMetrics() {
     returnedOrders: statusCount("Returned"),
     cancelledOrders: statusCount("Cancelled"),
     totalProducts: products.length,
-    lowStockProducts: products.filter((product) => product.stock <= 5).length
+    lowStockProducts: products.filter((product) => product.stock <= Number(getSettings().lowStockThreshold || 5)).length
   };
 }
 

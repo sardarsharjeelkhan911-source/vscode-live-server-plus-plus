@@ -9,32 +9,33 @@ function parseJSON(value) {
   }
 }
 
-function generateDemoCredentials() {
-  return {
-    username: "admin",
-    password: `demo-${Math.random().toString(36).slice(2, 10)}`
-  };
-}
-
-function ensureDemoCredentials() {
-  const existing = parseJSON(localStorage.getItem(ADMIN_CREDENTIALS_KEY));
-  if (existing?.username && existing?.password) {
-    return existing;
+function getStoredCredentials() {
+  const credentials = parseJSON(localStorage.getItem(ADMIN_CREDENTIALS_KEY));
+  if (credentials?.username && credentials?.password) {
+    return credentials;
   }
-  const seeded = generateDemoCredentials();
-  localStorage.setItem(ADMIN_CREDENTIALS_KEY, JSON.stringify(seeded));
-  return seeded;
+  return null;
 }
 
 export function loginAdmin(username, password) {
-  const credentials = ensureDemoCredentials();
-  const isValid = username === credentials.username && password === credentials.password;
-  if (!isValid) {
+  const normalizedUsername = String(username || "").trim();
+  const normalizedPassword = String(password || "");
+  const existing = getStoredCredentials();
+
+  if (!existing) {
+    if (!normalizedUsername || !normalizedPassword) {
+      throw new Error("Enter username and password to initialize demo admin login.");
+    }
+    localStorage.setItem(
+      ADMIN_CREDENTIALS_KEY,
+      JSON.stringify({ username: normalizedUsername, password: normalizedPassword })
+    );
+  } else if (normalizedUsername !== existing.username || normalizedPassword !== existing.password) {
     throw new Error("Invalid login credentials.");
   }
 
   const session = {
-    username,
+    username: normalizedUsername,
     loggedInAt: new Date().toISOString()
   };
   localStorage.setItem(ADMIN_SESSION_KEY, JSON.stringify(session));
@@ -46,17 +47,13 @@ export function logoutAdmin() {
 }
 
 export function getAdminSession() {
-  try {
-    return JSON.parse(localStorage.getItem(ADMIN_SESSION_KEY));
-  } catch {
-    return null;
-  }
+  return parseJSON(localStorage.getItem(ADMIN_SESSION_KEY));
 }
 
 export function isAdminLoggedIn() {
   return Boolean(getAdminSession());
 }
 
-export function getDemoAdminCredentials() {
-  return { ...ensureDemoCredentials() };
+export function isAdminConfigured() {
+  return Boolean(getStoredCredentials());
 }

@@ -7,13 +7,20 @@ import { getSettings } from "./storage.js";
 
 const phoneRegex = /^\+?\d{10,15}$/;
 
+export function normalizePhone(phone) {
+  return String(phone || "")
+    .trim()
+    .replace(/(?!^\+)[^\d]/g, "")
+    .replace(/\s+/g, "");
+}
+
 export function validateCheckoutInput(input) {
   const requiredFields = ["name", "phone", "email", "city", "address"];
   const missingField = requiredFields.find((field) => !input[field]?.trim());
   if (missingField) {
     throw new Error("Please fill all required customer fields.");
   }
-  if (!phoneRegex.test(input.phone.trim())) {
+  if (!phoneRegex.test(normalizePhone(input.phone))) {
     throw new Error("Invalid phone number format.");
   }
 }
@@ -62,7 +69,17 @@ export function getCheckoutSummary(buyNowItem = null) {
 }
 
 export async function placeOrder(customerInput, buyNowItem = null) {
-  validateCheckoutInput(customerInput);
+  const normalizedInput = {
+    ...customerInput,
+    name: customerInput.name.trim(),
+    phone: normalizePhone(customerInput.phone),
+    email: customerInput.email.trim(),
+    city: customerInput.city.trim(),
+    address: customerInput.address.trim(),
+    notes: customerInput.notes || ""
+  };
+
+  validateCheckoutInput(normalizedInput);
   const summary = buildSummary(buyNowItem);
 
   summary.items.forEach((item) => {
@@ -73,21 +90,16 @@ export async function placeOrder(customerInput, buyNowItem = null) {
   });
 
   summary.items.forEach((item) => decreaseStock(item.productId, item.qty));
-  let customer;
-  try {
-    customer = upsertCustomer(customerInput);
-  } catch (error) {
-    summary.items.forEach((item) => increaseStock(item.productId, item.qty));
-    throw error;
-  }
+  const orderId = `MS-${Date.now().toString(36).toUpperCase()}-${Math.floor(Math.random() * 900 + 100)}`;
 
   const baseOrder = {
-    customerName: customer.name,
-    customerPhone: customer.phone,
-    customerEmail: customer.email,
-    city: customer.city,
-    address: customer.address,
-    notes: customerInput.notes || "",
+    id: orderId,
+    customerName: normalizedInput.name,
+    customerPhone: normalizedInput.phone,
+    customerEmail: normalizedInput.email,
+    city: normalizedInput.city,
+    address: normalizedInput.address,
+    notes: normalizedInput.notes,
     items: summary.items,
     subtotal: summary.subtotal,
     delivery: summary.delivery,
@@ -97,7 +109,7 @@ export async function placeOrder(customerInput, buyNowItem = null) {
 
   let shipment;
   try {
-    shipment = await createShipment({ id: "TEMP", ...baseOrder });
+    shipment = await createShipment(baseOrder);
   } catch (error) {
     summary.items.forEach((item) => increaseStock(item.productId, item.qty));
     throw new Error(`Shipment booking failed: ${error.message}`);
@@ -113,6 +125,12 @@ export async function placeOrder(customerInput, buyNowItem = null) {
   } catch (error) {
     summary.items.forEach((item) => increaseStock(item.productId, item.qty));
     throw error;
+  }
+
+  try {
+    upsertCustomer(normalizedInput);
+  } catch {
+    // Customer aggregation can be rebuilt from orders; do not fail completed order.
   }
 
   if (summary.source === "cart") {

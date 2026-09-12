@@ -1,7 +1,7 @@
 import { addToCart, getCartCount, getCartDetails, removeCartItem, updateCartItem } from "./cart.js";
-import { getCheckoutSummary, placeOrder } from "./checkout.js";
+import { getCheckoutSummary, normalizePhone, placeOrder } from "./checkout.js";
 import { listCustomersWithStats } from "./customers.js";
-import { getDemoAdminCredentials, loginAdmin, logoutAdmin, isAdminLoggedIn } from "./auth.js";
+import { isAdminConfigured, loginAdmin, logoutAdmin, isAdminLoggedIn } from "./auth.js";
 import {
   ORDER_STATUSES,
   filterOrders,
@@ -374,7 +374,7 @@ function renderTrackingPage() {
   form.addEventListener("submit", (event) => {
     event.preventDefault();
     const orderId = document.getElementById("trackingOrderId").value.trim();
-    const phone = document.getElementById("trackingPhone").value.trim();
+    const phone = normalizePhone(document.getElementById("trackingPhone").value);
 
     if (!orderId || !phone) {
       showToast("Order ID and phone are required.");
@@ -386,7 +386,7 @@ function renderTrackingPage() {
     }
 
     const order = findOrderById(orderId);
-    if (!order || order.customerPhone !== phone) {
+    if (!order || normalizePhone(order.customerPhone) !== phone) {
       showToast("Invalid order ID or phone number.");
       result.classList.add("hidden");
       return;
@@ -421,10 +421,11 @@ function renderAdminPage() {
 
   const statusFilter = document.getElementById("orderStatusFilter");
   statusFilter.innerHTML = `<option value="">All</option>${ORDER_STATUSES.map((s) => `<option value="${s}">${s}</option>`).join("")}`;
-  const demoCredentials = getDemoAdminCredentials();
   const demoHint = document.getElementById("adminDemoHint");
   if (demoHint) {
-    demoHint.textContent = `Demo credentials: ${demoCredentials.username} / ${demoCredentials.password}`;
+    demoHint.textContent = isAdminConfigured()
+      ? "Use your configured local demo admin credentials."
+      : "First login bootstraps local demo credentials using the username/password you enter.";
   }
 
   function refreshAdminUI() {

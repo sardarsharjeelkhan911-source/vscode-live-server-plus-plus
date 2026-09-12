@@ -93,6 +93,22 @@ function safeParse(value) {
   } catch {
     return null;
   }
+
+  function mergeSeededRecords(defaultItems, existingItems) {
+    const existing = Array.isArray(existingItems) ? existingItems : [];
+    const merged = existing.map((item) => {
+      const seed = defaultItems.find((defaultItem) => defaultItem.id === item.id);
+      return seed ? { ...seed, ...item } : item;
+    });
+
+    defaultItems.forEach((defaultItem) => {
+      if (!merged.some((item) => item.id === defaultItem.id)) {
+        merged.push(defaultItem);
+      }
+    });
+
+    return merged;
+  }
 }
 
 export function initStorage() {
@@ -115,7 +131,9 @@ function migrate(data) {
       ...defaults,
       ...data,
       meta: { ...defaults.meta, ...(data.meta || {}) },
-      settings: { ...defaults.settings, ...(data.settings || {}) }
+      settings: { ...defaults.settings, ...(data.settings || {}) },
+      categories: mergeSeededRecords(defaults.categories, data.categories),
+      products: mergeSeededRecords(defaults.products, data.products)
     };
     merged.meta.schemaVersion = SCHEMA_VERSION;
     localStorage.setItem(DB_KEY, JSON.stringify(merged));
