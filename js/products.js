@@ -67,6 +67,17 @@ export function decreaseStock(productId, quantity) {
   setCollection("products", products);
 }
 
+export function increaseStock(productId, quantity) {
+  const products = getProducts();
+  const index = products.findIndex((product) => product.id === productId);
+  if (index === -1) {
+    return;
+  }
+  products[index].stock += quantity;
+  products[index].updatedAt = new Date().toISOString();
+  setCollection("products", products);
+}
+
 export function getLowStockProducts() {
   const threshold = getSettings().lowStockThreshold;
   return getProducts({ includeInactive: true }).filter((product) => product.stock <= threshold);

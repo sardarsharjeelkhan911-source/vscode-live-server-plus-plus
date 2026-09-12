@@ -1,7 +1,7 @@
 import { clearCart, getCartDetails } from "./cart.js";
 import { upsertCustomer } from "./customers.js";
 import { createOrder } from "./orders.js";
-import { getProductById, decreaseStock } from "./products.js";
+import { getProductById, decreaseStock, increaseStock } from "./products.js";
 import { createShipment } from "./tcs-api.js";
 import { getSettings } from "./storage.js";
 
@@ -73,8 +73,14 @@ export async function placeOrder(customerInput, buyNowItem = null) {
   });
 
   summary.items.forEach((item) => decreaseStock(item.productId, item.qty));
+  let customer;
+  try {
+    customer = upsertCustomer(customerInput);
+  } catch (error) {
+    summary.items.forEach((item) => increaseStock(item.productId, item.qty));
+    throw error;
+  }
 
-  const customer = upsertCustomer(customerInput);
   const baseOrder = {
     customerName: customer.name,
     customerPhone: customer.phone,
@@ -96,11 +102,17 @@ export async function placeOrder(customerInput, buyNowItem = null) {
     shipment = { trackingNumber: null, status: `Shipment pending (${error.message})` };
   }
 
-  const order = createOrder({
-    ...baseOrder,
-    trackingNumber: shipment.trackingNumber,
-    shipmentStatus: shipment.status
-  });
+  let order;
+  try {
+    order = createOrder({
+      ...baseOrder,
+      trackingNumber: shipment.trackingNumber,
+      shipmentStatus: shipment.status
+    });
+  } catch (error) {
+    summary.items.forEach((item) => increaseStock(item.productId, item.qty));
+    throw error;
+  }
 
   if (summary.source === "cart") {
     clearCart();

@@ -39,7 +39,7 @@ Demo local credentials are in `js/auth.js` (`DEMO_ADMIN_CREDENTIALS`):
 - Username: `admin`
 - Password: `admin123`
 
-You can change them in `js/storage.js` for local usage. Session is persisted in localStorage (`mystore.admin.session`).
+You can change them in `js/auth.js` for local usage. Session is persisted in localStorage (`mystore.admin.session`).
 
 ## 5) Real TCS API Integration Points
 

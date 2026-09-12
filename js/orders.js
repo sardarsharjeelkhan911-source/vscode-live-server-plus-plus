@@ -110,7 +110,7 @@ export function getDashboardMetrics() {
 }
 
 export function getSalesReport() {
-  const orders = listOrders();
+  const orders = listOrders().filter((order) => !["Cancelled", "Returned"].includes(order.status));
   const productSales = new Map();
 
   orders.forEach((order) => {
