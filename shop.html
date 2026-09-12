@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MyStore | Shop</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body data-page="shop">
+  <header class="site-header">
+    <nav class="navbar container" aria-label="Primary navigation">
+      <a href="index.html" class="brand">MyStore</a>
+      <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="shop.html">Shop</a></li>
+        <li><a href="shop.html#categories">Categories</a></li>
+        <li><a href="cart.html">Cart (<span id="cartCount">0</span>)</a></li>
+        <li><a href="tracking.html">Track Order</a></li>
+      </ul>
+      <form id="navbarSearchForm" class="nav-search" role="search">
+        <label for="navbarSearch" class="sr-only">Search products</label>
+        <input id="navbarSearch" name="q" type="search" placeholder="Search" />
+      </form>
+    </nav>
+  </header>
+
+  <main class="container section" id="categories">
+    <h1>Shop</h1>
+    <div class="filters">
+      <div>
+        <label for="shopSearch">Search</label>
+        <input id="shopSearch" type="search" placeholder="Search products" />
+      </div>
+      <div>
+        <label for="shopCategory">Category</label>
+        <select id="shopCategory"></select>
+      </div>
+      <div>
+        <label for="shopSort">Sort</label>
+        <select id="shopSort">
+          <option value="latest">Latest</option>
+          <option value="price-asc">Price: Low to High</option>
+          <option value="price-desc">Price: High to Low</option>
+          <option value="name">Name</option>
+        </select>
+      </div>
+    </div>
+    <div id="shopProducts" class="product-grid"></div>
+  </main>
+
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

@@ -1,75 +1,87 @@
-<p align="center">
-  <img width="128" height="128" src="https://raw.githubusercontent.com/ritwickdey/vscode-live-server-plus-plus/master/images/vscode-live-server-plus-plus.png">
-</p>
-<h3 align="center">Vscode Live Server++ (BETA) </h3>
-<p align="center">It's Truly Live<p>
+# MyStore (Local-First E-commerce App)
 
+MyStore is a complete beginner-friendly e-commerce web application built with **HTML, CSS, and JavaScript**. It runs locally with VS Code Live Server and uses **localStorage** for data persistence.
 
-[![VSCode Marketplace](https://img.shields.io/vscode-marketplace/v/ritwickdey.vscode-live-server-plus-plus.svg?style=flat-square&label=vscode%20marketplace)](https://marketplace.visualstudio.com/items?itemName=ritwickdey.vscode-live-server-plus-plus) [![Total Installs](https://img.shields.io/vscode-marketplace/d/ritwickdey.vscode-live-server-plus-plus.svg?style=flat-square)](https://marketplace.visualstudio.com/items?itemName=ritwickdey.vscode-live-server-plus-plus) [![Avarage Rating](https://img.shields.io/vscode-marketplace/r/ritwickdey.vscode-live-server-plus-plus.svg?style=flat-square)](https://marketplace.visualstudio.com/items?itemName=ritwickdey.vscode-live-server-plus-plus) [![Travis branch](https://img.shields.io/travis/com/ritwickdey/vscode-live-server-plus-plus/master.svg?style=flat-square&label=travis%20branch)](https://travis-ci.com/ritwickdey/vscode-live-server-plus-plus) [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://github.com/ritwickdey/vscode-live-server-plus-plus/)
+## 1) Run in VS Code
 
----
+1. Open this repository in VS Code.
+2. Install the **Live Server** extension (if not installed).
+3. Right-click `index.html` and select **Open with Live Server**.
+4. Use these pages:
+   - `index.html` (home)
+   - `shop.html` (catalog)
+   - `product.html?id=<productId>`
+   - `cart.html`
+   - `checkout.html`
+   - `tracking.html`
+   - `admin.html`
 
-![VSCode Live Server++](./images/vscode-live-server-plus-plus_preview1.gif)
+## 2) Add Products
 
----
-## Features
+1. Open `admin.html` and login.
+2. Use **Product Management** form:
+   - name, image URL/path, category, price, discount, stock, description.
+3. Click **Save Product**.
+4. Product appears in storefront immediately.
 
-- **No Need to save HTML, CSS, JS** :smile:
-- **No Browser full reload** (for HTML & CSS)
-- Customizable Server Root
-- Customizable Server Port
-- Customizable reloading time
-- Customizable index file (e.g `index.html`)
-- Auto Browser open (Mozila, Chrome & Edge)
-- Control from statusbar
+## 3) COD Checkout Flow
 
----
+- Add products to cart from home/shop/product pages.
+- Open `checkout.html`.
+- Fill customer details (name, phone, email, city, full address).
+- Click **Place Order**.
+- System validates required fields and phone format, checks stock, generates a unique order ID, updates stock, saves order/customer, and shows confirmation with status **Pending**.
 
-## Downside
+## 4) Admin Login (Demo Credentials)
 
-- `Live Server++` will work well if your project only contents `css` & `html` and minimal `JavaScript`. If you do lot of DOM Manupulation with JavaScript, `Live Server++` is not recommended.
+Demo local credentials are in `js/storage.js` under `settings.adminCredentials`:
 
---- 
-## How to Start/Stop Server ?
+- Username: `admin`
+- Password: `admin123`
 
-1. Open a project and click to `Go Live++` from the status bar to turn the server on/off.
+You can change them in `js/storage.js` for local usage. Session is persisted in localStorage (`mystore.admin.session`).
 
-2. Open the Command Pallete by pressing `F1` or `ctrl+shift+P` and type `Live Server++: Open Server` to start a server or type `Live Server++: Close Server` to stop a server.
+## 5) Real TCS API Integration Points
 
----
+`js/tcs-api.js` contains mock functions ready for replacement:
 
-## Settings
+- `createShipment(order)`
+- `getTrackingStatus(trackingNumber)`
+- `cancelShipment(trackingNumber)`
 
-[Click here to read settings Docs](./docs/settings.md).
+Add real endpoint URLs and credentials via a secure backend/environment layer. Do not expose real credentials in frontend code.
 
-## What's new ?
+## 6) Deploy to GitHub Pages
 
-- ### v0.0.1 (##DATE##)
-  - Initial release
-  - hot Reload supported
-  - No need to save
-  - 5 settings are added (Port, Root, indexFile, timeout, browser)
+1. Push repository to GitHub.
+2. In repository settings, open **Pages**.
+3. Select deploy source (branch: `main`, folder: `/root`).
+4. Save and wait for publish.
+5. Open the generated Pages URL.
 
----
+## Project Structure
 
-## Changelog
-
-To check full changelog [click here](CHANGELOG.md).
-
----
-
-## Why `Live Server++` when there is a `Live Server` ?
-
-Actually, I was receiving a lot of emails, PR, comments (and also there was few issue request, e.g. [#12080](https://github.com/Microsoft/vscode/issues/12080)) - `why auto reload only happens when we save the file`? - `why it's not realtime?`... blah blah....
-
-Well, in Live Server Extension, I'm using a popular npm module (named `live-server`) and it's the core library of Live Server. _(yaa! too many "Live Server" 😜)_. In the way it's working - it never possible auto reload without saving the file.
-
-And yaa, to be honest, when I made (in mid of `2017`) the live server extension, I didn't know Node.js or JavaScript well _(Hold on! I still don't know `Node.js` but I'm now confident)_. I even didn't know `promise`/`callback` well. I understood the `callback` _(& `callback hell` too)_ while making the extension. And `Promise`? Only I knew how to use it like `.then().then().then()` and `IIFE`? or `closure`? - I didn't even hear about those names at that time. 😬
-
-Okay, now coming to the point, Code of the `Live Server` can't be migrated with `Live Server++`. `Live Server++` is not depended on `live-server`(the npm module) - I've written the server side code from scratch & it has minimal dependency (still under development).
-
----
-
-## LICENSE
-
-This extension is licensed under the [MIT License](LICENSE)
+```
+/
+├── index.html
+├── shop.html
+├── product.html
+├── cart.html
+├── checkout.html
+├── tracking.html
+├── admin.html
+├── css/
+│   └── style.css
+├── js/
+│   ├── app.js
+│   ├── products.js
+│   ├── cart.js
+│   ├── checkout.js
+│   ├── orders.js
+│   ├── customers.js
+│   ├── auth.js
+│   ├── storage.js
+│   └── tcs-api.js
+└── assets/
+    └── placeholder.svg
+```

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MyStore | Order Tracking</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body data-page="tracking">
+  <header class="site-header">
+    <nav class="navbar container" aria-label="Primary navigation">
+      <a href="index.html" class="brand">MyStore</a>
+      <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="shop.html">Shop</a></li>
+        <li><a href="tracking.html">Track Order</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="container section">
+    <h1>Track Your Order</h1>
+    <form id="trackingForm" class="card narrow">
+      <label for="trackingOrderId">Order ID *</label>
+      <input id="trackingOrderId" required />
+      <label for="trackingPhone">Phone Number *</label>
+      <input id="trackingPhone" required />
+      <button class="btn btn-primary" type="submit">Track Order</button>
+    </form>
+    <section id="trackingResult" class="card hidden"></section>
+  </main>
+
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
